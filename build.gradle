@@ -1,0 +1,103 @@
+plugins {
+    id 'java-library'
+    id 'signing'
+    id 'maven-publish'
+}
+
+ext {
+    libraryName = 'Java MPEG 1/2/2.5 Layer 1/2/3 Decoder'
+    libraryGroupName = 'com.tianscar.javasound'
+    libraryVendorName = 'Tianscar'
+
+    libraryVersionCode = 1
+    libraryVersionName = '1.9.6'
+
+    librarySourceCompatibility = JavaVersion.VERSION_1_8
+    libraryTargetCompatibility = JavaVersion.VERSION_1_8
+}
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+sourceCompatibility = librarySourceCompatibility
+targetCompatibility = libraryTargetCompatibility
+
+group = libraryGroupName
+version = libraryVersionName
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+
+    implementation 'com.googlecode.soundlibs:tritonus-share:0.3.7.4'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = libraryGroupName
+            artifactId = rootProject.name
+            version = libraryVersionName
+            from components.java
+            pom {
+                name = libraryName
+                description = 'A decoder that decodes/converts MPEG 1/2/2.5 Layer 1/2/3 (i.e. MP3) in real time for the JAVA(tm) platform'
+                url = 'https://github.com/Tianscar/javasound-mp3'
+                licenses {
+                    license {
+                        name = 'GNU Library or Lesser General Public License, Version 2.0'
+                        url = 'http://www.gnu.org/licenses/old-licenses/lgpl-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'Tianscar'
+                        name = 'Karstian Lee'
+                        email = 'tianscar@protonmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git@github.com/Tianscar/javasound-mp3.git'
+                    developerConnection = 'scm:git:git@github.com/Tianscar/javasound-mp3.git'
+                    url = 'https://github.com/Tianscar/javasound-mp3'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = "OSSRH"
+            if (project.version.toString().endsWith("-SNAPSHOT")) {
+                url = "https://s01.oss.sonatype.org/content/repositories/snapshots"
+            } else {
+                url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            }
+            credentials {
+                username = findProperty("ossrhUsername") ?: System.getenv("OSSRH_USERNAME")
+                password = findProperty("ossrhPassword") ?: System.getenv("OSSRH_PASSWORD")
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+javadoc {
+    options.addStringOption("Xdoclint:none", "-quiet") // TODO cleanup JavaDocs
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
