@@ -85,7 +85,7 @@ public class PlayerTest {
 			  baseFormat.getChannels() * 2,
 			  baseFormat.getSampleRate(),
 			  false);
-		  if (out != null) out.println("Target Format : "+decodedFormat.toString());
+		  if (out != null) out.println("Target Format : "+ decodedFormat);
 		  din = AudioSystem.getAudioInputStream(decodedFormat, in);
 		  if (din instanceof PropertiesContainer)
 		  {

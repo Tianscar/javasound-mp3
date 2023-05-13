@@ -51,7 +51,7 @@ public class CLITest {
 		InputStream pin = Thread.currentThread().getContextClassLoader().getResourceAsStream("test.mp3.properties");
 		props.load(pin);
 		String basefile = props.getProperty("basefile");
-		String name = props.getProperty("filename");
+		String name = props.getProperty("filename_mp2");
 		filename = basefile + name;
 		out = System.out;
 	}
