@@ -1,7 +1,7 @@
 # Java MPEG 1/2/2.5 Layer 1/2/3 Decoder
 This is a fork of [JLayer](https://web.archive.org/web/20210108055829/http://www.javazoom.net/javalayer/javalayer.html) and [MP3SPI](https://web.archive.org/web/20200624143314/http://www.javazoom.net/mp3spi/mp3spi.html).
 
-This library contains a decoder that decodes/converts MPEG 1/2/2.5 Layer 1/2/3 (i.e. MP3) in real time for the JAVA(tm) platform, and an SPI (Service Provider Interface) that adds MP3 support for JavaSound. This is a non-commercial project and anyone can add his contribution.
+This library contains a decoder that decodes/converts MPEG 1/2/2.5 Layer 1/2/3 (i.e. MP3) in real time for the JAVA(tm) platform, and an SPI (Service Provider Interface) that adds MP3 support for JavaSound. This is a non-commercial project and anyone can add the contribution.
 
 **KNOWN PROBLEM:**  
 99% of MP3 plays well with this library but some (1%) return an ArrayIndexOutOfBoundsException while playing. It might come from invalid audio frames.  
