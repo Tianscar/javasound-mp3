@@ -77,7 +77,7 @@ public class MpegAudioFileReader extends TAudioFileReader
             { MpegEncoding.MPEG2L1, MpegEncoding.MPEG2L2, MpegEncoding.MPEG2L3 },
             { MpegEncoding.MPEG1L1, MpegEncoding.MPEG1L2, MpegEncoding.MPEG1L3 },
             { MpegEncoding.MPEG2DOT5L1, MpegEncoding.MPEG2DOT5L2, MpegEncoding.MPEG2DOT5L3 }, };
-    public static int INITAL_READ_LENGTH = 128000*32;
+    public static int INITAL_READ_LENGTH = 128000*32*2;
     private static int MARK_LIMIT = INITAL_READ_LENGTH + 1;
     static {
     	String s = System.getProperty("marklimit");
@@ -336,7 +336,7 @@ public class MpegAudioFileReader extends TAudioFileReader
             TDebug.out("InputStream : " + inputStream + " =>" + new String(head));
         }
 
-        // Check for WAV, AU, and AIFF, Ogg Vorbis, Flac, MAC file formats.
+        // Check for WAV, AU, and AIFF, Ogg Vorbis, Flac, MAC, WavPack, MP4 file formats.
         // Next check for Shoutcast (supported) and OGG (unsupported) streams.
         if ((head[0] == 'R') && (head[1] == 'I') && (head[2] == 'F') && (head[3] == 'F') && (head[8] == 'W') && (head[9] == 'A') && (head[10] == 'V') && (head[11] == 'E'))
         {
@@ -367,6 +367,16 @@ public class MpegAudioFileReader extends TAudioFileReader
         {
             if (TDebug.TraceAudioFileReader) TDebug.out("FLAC stream found");
             if (weak == null) throw new UnsupportedAudioFileException("FLAC stream found");
+        }
+        else if ((head[0] == 'w') && (head[1] == 'v') && (head[2] == 'p') && (head[3] == 'k'))
+        {
+            if (TDebug.TraceAudioFileReader) TDebug.out("WavPack stream found");
+            if (weak == null) throw new UnsupportedAudioFileException("WavPack stream found");
+        }
+        else if ((head[4] == 'f') && (head[5] == 't') && (head[6] == 'y') && (head[7] == 'p'))
+        {
+            if (TDebug.TraceAudioFileReader) TDebug.out("MP4 stream found");
+            if (weak == null) throw new UnsupportedAudioFileException("MP4 stream found");
         }
         // Shoutcast stream ?
         else if (((head[0] == 'I') | (head[0] == 'i')) && ((head[1] == 'C') | (head[1] == 'c')) && ((head[2] == 'Y') | (head[2] == 'y')))
@@ -468,8 +478,8 @@ public class MpegAudioFileReader extends TAudioFileReader
         }
         catch (Exception e)
         {
-            if (TDebug.TraceAudioFileReader) TDebug.out("not a MPEG stream:" + e.getMessage());
-            throw new UnsupportedAudioFileException("not a MPEG stream:" + e.getMessage());
+            if (TDebug.TraceAudioFileReader) TDebug.out("not a MPEG stream: " + e.getMessage());
+            throw new UnsupportedAudioFileException("not a MPEG stream: " + e.getMessage());
         }
         // Deeper checks ?
         int cVersion = (nHeader >> 19) & 0x3;
@@ -514,7 +524,7 @@ public class MpegAudioFileReader extends TAudioFileReader
         InputStream inputStream = new FileInputStream(file);
         try
         {
-            return getAudioInputStream(inputStream);
+            return getAudioInputStream(inputStream, file.length());
         }
         catch (UnsupportedAudioFileException e)
         {

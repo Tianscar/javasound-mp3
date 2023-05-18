@@ -20,7 +20,7 @@ repositories {
 ```groovy
 dependencies {
     ...
-    implementation 'com.tianscar.javasound:javasound-mp3:1.9.6'
+    implementation 'com.tianscar.javasound:javasound-mp3:1.9.7'
 }
 ```
 
