@@ -33,3 +33,8 @@ Note you need to download test audios [here](https://github.com/Tianscar/fbodemo
 
 ## License
 [LGPL-2.1](/LICENSE)
+
+### Dependencies
+| Library                                                                                       | License  | Comptime | Runtime |
+|-----------------------------------------------------------------------------------------------|----------|----------|---------|
+| [Tritonus Share](https://mvnrepository.com/artifact/com.googlecode.soundlibs/tritonus-share)  | LGPL-2.1 | Yes      | Yes     |
