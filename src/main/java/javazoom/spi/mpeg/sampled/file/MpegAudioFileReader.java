@@ -276,12 +276,12 @@ public class MpegAudioFileReader extends TAudioFileReader
         {
             TDebug.out("MpegAudioFileReader.getAudioFileFormat(URL): begin");
         }
-        long lFileLengthInBytes = AudioSystem.NOT_SPECIFIED;
         URLConnection conn = url.openConnection();
         // Tell shoucast server (if any) that SPI support shoutcast stream.
         conn.setRequestProperty("Icy-Metadata", "1");
         InputStream inputStream = conn.getInputStream();
         AudioFileFormat audioFileFormat = null;
+        long lFileLengthInBytes = conn.getContentLengthLong();
         try
         {
             audioFileFormat = getAudioFileFormat(inputStream, lFileLengthInBytes);
@@ -293,6 +293,27 @@ public class MpegAudioFileReader extends TAudioFileReader
         if (TDebug.TraceAudioFileReader)
         {
             TDebug.out("MpegAudioFileReader.getAudioFileFormat(URL): end");
+        }
+        return audioFileFormat;
+    }
+
+    @Override
+    public AudioFileFormat getAudioFileFormat(InputStream inputStream) throws UnsupportedAudioFileException, IOException {
+        if (TDebug.TraceAudioFileReader) {
+            TDebug.out("TAudioFileReader.getAudioFileFormat(InputStream): begin (class: "+getClass().getSimpleName()+")");
+        }
+        long lFileLengthInBytes = inputStream.available();
+        inputStream.mark(MARK_LIMIT);
+        AudioFileFormat	audioFileFormat;
+        try {
+            audioFileFormat = getAudioFileFormat(inputStream, lFileLengthInBytes);
+        }
+        catch (UnsupportedAudioFileException | IOException e) {
+            inputStream.reset();
+            throw e;
+        }
+        if (TDebug.TraceAudioFileReader) {
+            TDebug.out("TAudioFileReader.getAudioFileFormat(InputStream): end");
         }
         return audioFileFormat;
     }
@@ -429,7 +450,9 @@ public class MpegAudioFileReader extends TAudioFileReader
             if (mLength != AudioSystem.NOT_SPECIFIED)
             {
                 nTotalMS = Math.round(m_header.total_ms(tmpLength));
-                aff_properties.put("duration", new Long((long) nTotalMS * 1000L));
+                long nTotalNS = nTotalMS * 1000L;
+                if (nLayer == 3) nTotalNS /= nChannels;
+                aff_properties.put("duration", new Long(nTotalNS));
             }
             aff_properties.put("mp3.copyright", new Boolean(m_header.copyright()));
             aff_properties.put("mp3.original", new Boolean(m_header.original()));
@@ -462,7 +485,8 @@ public class MpegAudioFileReader extends TAudioFileReader
             throw new UnsupportedAudioFileException("not a MPEG stream: wrong sampling rate");
         }
         // Look up for ID3v1 tag
-        if ((size == mediaLength) && (mediaLength != AudioSystem.NOT_SPECIFIED))
+        if ((size == mediaLength) && (mediaLength != AudioSystem.NOT_SPECIFIED)
+                && inputStream instanceof FileInputStream)
         {
             FileInputStream fis = (FileInputStream) inputStream;
             byte[] id3v1 = new byte[128];

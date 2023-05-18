@@ -4,4 +4,5 @@
 /build/classes/java/main/
 /build/classes/java/test/
 
-/src/test/resources/fbodemo1*
+/src/test/resources/
+!/src/test/resources/test.mp3.properties
