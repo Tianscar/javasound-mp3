@@ -603,7 +603,7 @@ public class MpegAudioFileReader extends TAudioFileReader
     public AudioInputStream getAudioInputStream(InputStream inputStream) throws UnsupportedAudioFileException, IOException
     {
         if (TDebug.TraceAudioFileReader) TDebug.out("MpegAudioFileReader.getAudioInputStream(InputStream inputStream)");
-        if (!inputStream.markSupported()) inputStream = new BufferedInputStream(inputStream);
+        if (!inputStream.markSupported()) throw new IOException("mark/reset not supported");
         return super.getAudioInputStream(inputStream);
     }
 
