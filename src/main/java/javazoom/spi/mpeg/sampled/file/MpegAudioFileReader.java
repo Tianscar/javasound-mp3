@@ -460,9 +460,7 @@ public class MpegAudioFileReader extends TAudioFileReader
             if (mLength != AudioSystem.NOT_SPECIFIED)
             {
                 nTotalMS = Math.round(m_header.total_ms(tmpLength));
-                long nTotalNS = nTotalMS * 1000L;
-                if (nLayer == 3) nTotalNS /= nChannels;
-                aff_properties.put("duration", new Long(nTotalNS));
+                aff_properties.put("duration", new Long(nTotalMS * 1000L));
             }
             aff_properties.put("mp3.copyright", new Boolean(m_header.copyright()));
             aff_properties.put("mp3.original", new Boolean(m_header.original()));
