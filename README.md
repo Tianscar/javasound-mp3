@@ -1,3 +1,5 @@
+WARNING: THIS PROJECT IS NO LONGER MAINTAINED. MOVED TO: https://github.com/jseproject/jse-spi
+
 # Java MPEG 1/2/2.5 Layer 1/2/3 Decoder
 This is a fork of [JLayer](https://web.archive.org/web/20210108055829/http://www.javazoom.net/javalayer/javalayer.html) and [MP3SPI](https://web.archive.org/web/20200624143314/http://www.javazoom.net/mp3spi/mp3spi.html).
 
